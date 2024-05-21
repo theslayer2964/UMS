@@ -1,0 +1,1 @@
+mvn install:install-file -DgroupId=vn.mobifone -DartifactId=vaspro-ws -Dversion=1.0 -Dpackaging=jar -Dfile=vaspro-ws.jar -DgeneratePom=true

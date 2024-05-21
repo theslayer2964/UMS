@@ -1,0 +1,66 @@
+#snackbarSuccess {
+    visibility: hidden;
+    min-width: 350px;
+    background-color: #3FC1A5 !important;
+    color: #DBF1ED;
+    text-align: left;
+    border-radius: 2px;
+    padding: 5px 16px 10px 16px;
+    position: fixed;
+    z-index: 1;
+    left: 30px;
+    bottom: 50px;
+}
+
+#snackbarSuccess.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 3.5s;
+    animation: fadein 0.5s, fadeout 0.5s 3.5s;
+}
+
+#snackbarError {
+    visibility: hidden;
+    min-width: 350px;
+    background-color: #E96153 !important;
+    color: #DBF1ED;
+    text-align: left;
+    border-radius: 2px;
+    padding: 5px 16px 10px 16px;
+    position: fixed;
+    z-index: 1;
+    left: 30px;
+    bottom: 50px;
+}
+
+#snackbarError.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 3.5s;
+    animation: fadein 0.5s, fadeout 0.5s 3.5s;
+}
+
+/* Animations to fade the snackbar in and out */
+@-webkit-keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 50px; opacity: 1;}
+}
+
+@keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 50px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+    from {bottom: 50px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+}
+
+.header-snackbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
