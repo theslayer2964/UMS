@@ -3,6 +3,7 @@ package vn.molu.automation.service.basic;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -20,7 +21,7 @@ public class BasicSetup {
     private WebDriver driver;
 
     public WebDriver getDriver(String appURL, String driverLocation) {
-        initializeTestBaseSetup("firefox", appURL, driverLocation);
+        initializeTestBaseSetup("chrome", appURL, driverLocation);
         return driver;
     }
 
@@ -57,8 +58,11 @@ public class BasicSetup {
     private WebDriver initChromeDriver(String appURL, String driverLocation) {
         try {
             System.out.println("Launching chrome browser..."+ driverLocation);
-            System.setProperty("webdriver.chrome.driver", driverLocation);
-            WebDriver driver = new ChromeDriver();
+//            System.setProperty("webdriver.chrome.driver", driverLocation);
+            String seleniumHubUrl = "http://10.39.68.174:4444/wd/hub";
+            ChromeOptions options = new ChromeOptions();
+            WebDriver driver = new RemoteWebDriver(new URL(seleniumHubUrl), options);
+
             driver.manage().window().maximize();
             driver.navigate().to(appURL);
             driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
