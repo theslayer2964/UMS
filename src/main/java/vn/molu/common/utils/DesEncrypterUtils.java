@@ -112,6 +112,7 @@ public final class DesEncrypterUtils {
             System.out.println("aaaaaaaaaaaa");
             System.out.println(getInstance().encrypt("vms@kpi"));
             System.out.println(getInstance().decrypt("GSBObb9no5U="));
+            System.out.println(getInstance().decrypt("8Gws+mIEnlo="));
         } catch (Exception e) {
             e.printStackTrace();
         }

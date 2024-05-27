@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,11 @@ public class BasicSetup {
     private WebDriver driver;
 
     public WebDriver getDriver(String appURL, String driverLocation) {
-        initializeTestBaseSetup("chrome", appURL, driverLocation);
+        initializeTestBaseSetup("firefox", appURL, driverLocation);
         return driver;
     }
 
-    private void setDriver(String browserType, String appURL, String driverLocation) throws MalformedURLException {
+    private void setDriver(String browserType, String appURL, String driverLocation) {
         switch (browserType) {
             case "chrome":
                 driver = initChromeDriver(appURL, driverLocation);
@@ -41,9 +42,11 @@ public class BasicSetup {
 
     private WebDriver initFirefoxDriver(String appURL, String driverLocation) {
         try {
-            System.out.println("Launching firefox browser..."+ driverLocation);
-            System.setProperty("webdriver.gecko.driver", driverLocation);
-            WebDriver driver = new FirefoxDriver();
+            System.out.println("Launching firefox browser..." + driverLocation);
+//            System.setProperty("webdriver.gecko.driver", driverLocation);
+//            WebDriver driver = new FirefoxDriver();
+            FirefoxOptions options = new FirefoxOptions();
+            WebDriver driver = new RemoteWebDriver(new URL(driverLocation), options);
             driver.manage().window().maximize();
             driver.navigate().to(appURL);
             driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
@@ -57,12 +60,11 @@ public class BasicSetup {
 
     private WebDriver initChromeDriver(String appURL, String driverLocation) {
         try {
-            System.out.println("Launching chrome browser..."+ driverLocation);
+            System.out.println("Launching chrome browser... " + driverLocation);
 //            System.setProperty("webdriver.chrome.driver", driverLocation);
-            String seleniumHubUrl = "http://10.39.68.174:4444/wd/hub";
+//            String seleniumHubUrl = "http://10.151.99.46:4444/wd/hub";
             ChromeOptions options = new ChromeOptions();
-            WebDriver driver = new RemoteWebDriver(new URL(seleniumHubUrl), options);
-
+            WebDriver driver = new RemoteWebDriver(new URL(driverLocation), options);
             driver.manage().window().maximize();
             driver.navigate().to(appURL);
             driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);

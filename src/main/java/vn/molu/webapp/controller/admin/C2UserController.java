@@ -71,7 +71,7 @@ public class C2UserController extends ApplicationObjectSupport {
     private Environment environment;
     @Autowired
     private HandleExceptionService handleExceptionService;
-    @Value("${system.chrome.path}")
+    @Value("${system.selenium-server.path}")
     private String chromeLocationUrl;
 
     @RequestMapping(value = "/ajax/getC2UserByUsername.html", method = RequestMethod.GET, headers = "Accept=application/json")

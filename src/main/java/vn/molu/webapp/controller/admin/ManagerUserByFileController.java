@@ -18,7 +18,6 @@ import vn.molu.automation.service.page.HeThongCSKH;
 import vn.molu.automation.service.page.HeThongTTCP;
 import vn.molu.automation.service.page.QuanTriPhanQuyenUser;
 import vn.molu.common.Constants;
-import vn.molu.common.utils.DesEncrypterUtils;
 import vn.molu.common.utils.RequestUtil;
 import vn.molu.domain.admin.C2AdminUserAuto;
 import vn.molu.domain.admin.User;
@@ -49,8 +48,8 @@ public class ManagerUserByFileController extends ApplicationObjectSupport {
     private HandleExceptionService handleExceptionService;
     @Autowired
     private Environment environment;
-    @Value("${system.chrome.path}")
-    private String chromeLocationUrl;
+    @Value("${system.selenium-server.path}")
+    private String seleniumServer;
 
     @RequestMapping("/list/manager_user_c2_file.html")
     public ModelAndView list(@ModelAttribute(value = Constants.FORM_MODEL_KEY) ManagerUserByFileCommand command,
@@ -79,7 +78,7 @@ public class ManagerUserByFileController extends ApplicationObjectSupport {
                 Map<String, Integer> result_OneUserForAllProgram = new HashMap<>();
                 try {
                     if (user.getProgram().contains("3")) { // cskh
-                        HeThongCSKH cskh = new HeThongCSKH(chromeLocationUrl);
+                        HeThongCSKH cskh = new HeThongCSKH(seleniumServer);
                         C2UserAdminDTO dto = new C2UserAdminDTO();
                         dto.setUsername(user.getUser_name());
                         dto.setFullName("TEST");
@@ -87,14 +86,14 @@ public class ManagerUserByFileController extends ApplicationObjectSupport {
                         result_OneUserForAllProgram.put(Constants.PROGRAM_CSKH, rsCSKH == true ? 1 : 0);
                     }
                     if (user.getProgram().contains("2")) { // ttcp
-                        HeThongTTCP ttcp = new HeThongTTCP(chromeLocationUrl);
+                        HeThongTTCP ttcp = new HeThongTTCP(seleniumServer);
                         C2UserAdminDTO dto = new C2UserAdminDTO();
                         dto.setUsername(user.getUser_name());
                         boolean rsTTCP = ttcp.inactiveUser(dto, user.getShop_code(), loginUser);
                         result_OneUserForAllProgram.put(Constants.PROGRAM_TTCP, rsTTCP == true ? 1 : 0);
                     }
                     if (user.getProgram().contains("1")) {
-                        QuanTriPhanQuyenUser quanTriPhanQuyenUser = new QuanTriPhanQuyenUser(chromeLocationUrl);
+                        QuanTriPhanQuyenUser quanTriPhanQuyenUser = new QuanTriPhanQuyenUser(seleniumServer);
                         boolean rsDTHGD = quanTriPhanQuyenUser.inactivityUser(user.getUser_name(), loginUser);
                         result_OneUserForAllProgram.put(Constants.PROGRAM_DTHGD, rsDTHGD == true ? 1 : 0);
                     }
@@ -107,7 +106,7 @@ public class ManagerUserByFileController extends ApplicationObjectSupport {
                         result_OneUserForAllProgram.put(Constants.PROGRAM_RESNUM, rsResnum > 0 ? 1 : 0);
                     }
                     if (user.getProgram().contains("6")) {
-                        HeThongBHTT heThongBHTT = new HeThongBHTT(chromeLocationUrl);
+                        HeThongBHTT heThongBHTT = new HeThongBHTT(seleniumServer);
                         Boolean rsBHTT = heThongBHTT.inactiveUser(user.getUser_name(), userService.getUserLogin_BHTT_System());
                         result_OneUserForAllProgram.put(Constants.PROGRAM_BHTT, rsBHTT == true ? 1 : 0);
                     }

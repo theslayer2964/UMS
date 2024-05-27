@@ -12,10 +12,15 @@ public class Resum_UserDAOImpl extends GenericDAOImpl<Resum_UserDTO, String> imp
     @Override
     @Transactional
     public Integer insert(Resum_UserDTO resumUserDTO) {
-        String sqlClause = "{ call sonbn.pr_add_user (?1) }";
-        return entityManager.createNativeQuery(sqlClause)
-                .setParameter(1, resumUserDTO.getUser_tracuu())
-                .executeUpdate();
+        try {
+            String sqlClause = "{ call sonbn.pr_add_user (?1) }";
+            return entityManager.createNativeQuery(sqlClause)
+                    .setParameter(1, resumUserDTO.getUser_tracuu())
+                    .executeUpdate();
+        } catch (Exception e){
+            e.printStackTrace();
+            return 0;
+        }
     }
 
     @Override

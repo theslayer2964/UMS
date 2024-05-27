@@ -41,8 +41,9 @@ public class C2UserAdminDAOImpl extends GenericDAOImpl<C2UserAdminDTO, Long> imp
 
     @Override
     public List<C2UserAdminDTO> layDS_ViPham_TanSuat_TraCuu_All() {
-        String sqlClause = "select user_id, user_name, full_name, substr(description, 13 , 10), status, shop_code, center_code, granted_ip, account  " +
-                "from c2_admin_user where status = '4' and center_code = '2' and description like '%5814%' ";
+        String sqlClause = "select user_id, user_name, full_name, substr(description, 13 , 10) NGAYKHOA, status, shop_code, center_code, granted_ip, account \n" +
+                "    from c2_admin_user where status = '4' and center_code = '2' and description like '%5814%' and REGEXP_LIKE( substr(description, 13 , 10), '^\\d{2}/\\d{2}/\\d{4}$') \n" +
+                "    order by TO_DATE(NGAYKHOA, 'DD/MM/YYYY') desc";
         return DTOMapper((List<Object[]>) entityManager.createNativeQuery(sqlClause)
                 .getResultList());
     }

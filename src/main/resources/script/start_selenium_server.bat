@@ -1,1 +1,0 @@
-java -jar C:\Users\Mobifone\UMS\src\main\webapp\driver\selenium-server-standalone-3.141.59.jar -role hub
