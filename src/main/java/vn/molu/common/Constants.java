@@ -201,6 +201,7 @@ public class Constants {
     public static final String FAD_PROGRAM = "FAD_PROGRAM";
     public static final String FAD_EXPLANATION_FORM = "FAD_EXPLANATIONFORM";
     public static final String FAD_GUEST_INFO = "FAD_GUESTINFO";
+    public static final String FAD_GUEST_REQUEST = "FAD_GUESTREQUEST";
     public static final String FG_ADMIN = "FG_ADMIN";
     public static final String FG_UTILITY = "FG_UTILITY";
     public static final String FG_LIST = "FG_LIST";
@@ -226,6 +227,7 @@ public class Constants {
     public static final String FAD_PROGRAM_LINK = "/list/program.html";
     public static final String FAD_EXPLANATION_FORM_LINK = "/guest/explanation-form.html";
     public static final String FAD_GUEST_INFO_LINK = "/guest/info.html";
+    public static final String FAD_GUEST_REQUEST_LINK = "/guest/request-user.html";
     //    month
     public static final Integer JAN = 1;
     public static final Integer FEB = 2;

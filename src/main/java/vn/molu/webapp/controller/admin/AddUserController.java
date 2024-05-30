@@ -63,6 +63,8 @@ public class AddUserController extends ApplicationObjectSupport {
     private Environment environment;
     @Value("${system.selenium-server.path}")
     private String seleniumServer;
+    @Value("${system.firefox.driver}")
+    private String firefoxDriver;
 
     @RequestMapping("/list/add_user_c2.html")
     public ModelAndView list(@ModelAttribute(value = Constants.FORM_MODEL_KEY) AddUserCommand command,
@@ -107,15 +109,15 @@ public class AddUserController extends ApplicationObjectSupport {
             Map<String, Integer> result_OneUserForAllProgram = new HashMap<>();
             if (string.equals(Constants.PROGRAM_ID_DTHGD)) {
                 List<GroupUser> listGroupUserPermission = groupUserService.findAll();
-                QuanTriPhanQuyenUser quanTriPhanQuyenUser = new QuanTriPhanQuyenUser(seleniumServer);
+                QuanTriPhanQuyenUser quanTriPhanQuyenUser = new QuanTriPhanQuyenUser(firefoxDriver, seleniumServer);
                 boolean rsDTHGD = quanTriPhanQuyenUser.createUser(command.getPojo(), listGroupUserPermission, userLogin); // birthday='2024-02-06'
                 result_OneUserForAllProgram.put(Constants.PROGRAM_DTHGD, rsDTHGD == true ? 1 : 0);
             } else if (string.equals(Constants.PROGRAM_ID_TTCP)) {
-                HeThongTTCP heThongTTCP = new HeThongTTCP(seleniumServer);
+                HeThongTTCP heThongTTCP = new HeThongTTCP(firefoxDriver, seleniumServer);
                 boolean rsTTCP = heThongTTCP.createUser(command.getPojo(), userLogin); // birthday='2024-02-06', ngaycap='2024-02-13'
                 result_OneUserForAllProgram.put(Constants.PROGRAM_TTCP, rsTTCP == true ? 1 : 0);
             } else if (string.equals(Constants.PROGRAM_ID_CSKH)) {
-                HeThongCSKH heThongCSKH = new HeThongCSKH(seleniumServer);
+                HeThongCSKH heThongCSKH = new HeThongCSKH(firefoxDriver, seleniumServer);
                 String city = cityDAO.getCityname(command.getPojo().getCity()).get(0).getCity_name();
                 boolean rsCSKH = heThongCSKH.createUser(command.getPojo(), city, userLogin); // birthday='2024-02-06', ngaycap='2024-02-13'
                 result_OneUserForAllProgram.put(Constants.PROGRAM_CSKH, rsCSKH == true ? 1 : 0);
@@ -149,7 +151,7 @@ public class AddUserController extends ApplicationObjectSupport {
                 result_OneUserForAllProgram.put(Constants.PROGRAM_CSKK, rsCSKK.getStatus() == 1 ? 1 : 0);
                 // b3: show kq:
             } else if(string.equals(Constants.PROGRAM_ID_BHTT)){
-                HeThongBHTT heThongBHTT = new HeThongBHTT(seleniumServer);
+                HeThongBHTT heThongBHTT = new HeThongBHTT(firefoxDriver, seleniumServer);
                 List<GroupUser> listGroupUserPermission = groupUserService.findGroupUserByRoleNProgram(0, Constants.PROGRAM_ID_BHTT);
                 Boolean rsBHTT = heThongBHTT.createUser(command.getPojo(), userService.getUserLogin_BHTT_System(), listGroupUserPermission);
                 result_OneUserForAllProgram.put(Constants.PROGRAM_BHTT, rsBHTT == true ? 1 : 0);

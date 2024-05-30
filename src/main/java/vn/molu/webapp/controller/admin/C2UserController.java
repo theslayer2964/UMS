@@ -4,12 +4,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.exception.GenericJDBCException;
-import org.openqa.selenium.Platform;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeDriverService;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.ApplicationObjectSupport;
@@ -39,11 +33,9 @@ import vn.molu.webapp.command.admin.C2AdminUserCommand;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 @Controller
 public class C2UserController extends ApplicationObjectSupport {
@@ -73,6 +65,8 @@ public class C2UserController extends ApplicationObjectSupport {
     private HandleExceptionService handleExceptionService;
     @Value("${system.selenium-server.path}")
     private String chromeLocationUrl;
+    @Value("${system.firefox.driver}")
+    private String firefoxDriver;
 
     @RequestMapping(value = "/ajax/getC2UserByUsername.html", method = RequestMethod.GET, headers = "Accept=application/json")
     public @ResponseBody
@@ -206,13 +200,13 @@ public class C2UserController extends ApplicationObjectSupport {
         User loginUser = userService.findByUsername(); // USER dang login
         if (employeeService.checkUserIsGDV(command.getPojo().getUsername()).equals("YES")) { //CHECK GDV
             if (command.getProgram().contains(Constants.PROGRAM_ID_TTCP)) {
-                HeThongTTCP ttcp = new HeThongTTCP(chromeLocationUrl);
+                HeThongTTCP ttcp = new HeThongTTCP(firefoxDriver, chromeLocationUrl);
                 boolean rsTTCP = ttcp.changeShopcode(command.getPojo(), command.getShopcode_old(), loginUser);
                 result_OneUserForAllProgram.put(Constants.PROGRAM_TTCP, rsTTCP == true ? 1 : 0);
             }
             // tim ds Shop code cua nguoi do:
             if (command.getProgram().contains(Constants.PROGRAM_ID_CSKH)) {
-                HeThongCSKH cskh = new HeThongCSKH(chromeLocationUrl);
+                HeThongCSKH cskh = new HeThongCSKH(firefoxDriver, chromeLocationUrl);
                 // tìm lại thông tin của User đó để tìm loại NV -> chưa xong, làm lại
                 EmployeeDTO employeeDTO = employeeService.findActiveEmp_codeByUsername(command.getPojo().getUsername());
                 if (employeeDTO != null && employeeDTO.getEmp_type() != null) {
@@ -224,7 +218,7 @@ public class C2UserController extends ApplicationObjectSupport {
                 result_OneUserForAllProgram.put(Constants.PROGRAM_CSKH, rsCSKH == true ? 1 : 0);
             }
             if (command.getProgram().contains(Constants.PROGRAM_ID_BHTT)) {
-                HeThongBHTT heThongBHTT = new HeThongBHTT(chromeLocationUrl);
+                HeThongBHTT heThongBHTT = new HeThongBHTT(firefoxDriver, chromeLocationUrl);
                 boolean rsBHTT = heThongBHTT.changeShopcode(command.getPojo().getUsername(), command.getPojo().getShopCode(), userService.getUserLogin_BHTT_System());
                 result_OneUserForAllProgram.put(Constants.PROGRAM_BHTT, rsBHTT == true ? 1 : 0);
             }
@@ -233,7 +227,7 @@ public class C2UserController extends ApplicationObjectSupport {
                     .replace("USER", command.getPojo().getUsername()));
         }
         if (command.getProgram().contains(Constants.PROGRAM_ID_DTHGD)) {
-            QuanTriPhanQuyenUser qtpq = new QuanTriPhanQuyenUser(chromeLocationUrl);
+            QuanTriPhanQuyenUser qtpq = new QuanTriPhanQuyenUser(firefoxDriver, chromeLocationUrl);
             if (command.getPojo().getGranted_ip() == null || command.getPojo().getGranted_ip().equals("")) {
                 listIncorrectDataUser.add(environment.getProperty("msg.incorrect_mail_message.wrong_ip")
                         .replace("SHOPCODE", command.getPojo().getShopCode()));

@@ -19,6 +19,7 @@ public class HeThongTTCP extends BasicSetup {
     private WebDriver driver;
     public SignInPage signInPage;
     private String chromeLocationUrl;
+    private String seleniumServer;
     private static final String appUrl = "https://ttcp.mobifone.vn/b9_ttcp/";
     private By txtUsername_Login = By.xpath("//input[@id='frm_login:username']");
     private By txtPassword_Login = By.xpath("//input[@id='frm_login:password']");
@@ -31,7 +32,7 @@ public class HeThongTTCP extends BasicSetup {
     private By txt_searchUserRS = By.xpath("//span[@class='ui-paginator-current']");
 
     public void setUp() {
-        driver = getDriver(appUrl, chromeLocationUrl);
+        driver = getDriver(appUrl, chromeLocationUrl, seleniumServer);
     }
 
     public boolean createUser(C2AdminUserAuto dto, User user) throws InterruptedException, ParseException {
@@ -51,8 +52,9 @@ public class HeThongTTCP extends BasicSetup {
     public HeThongTTCP() {
     }
 
-    public HeThongTTCP(String chromeLocationUrl) {
+    public HeThongTTCP(String chromeLocationUrl, String seleniumServer) {
         this.chromeLocationUrl = chromeLocationUrl;
+        this.seleniumServer = seleniumServer;
     }
 
     public String getChromeLocationUrl() {
@@ -61,6 +63,14 @@ public class HeThongTTCP extends BasicSetup {
 
     public void setChromeLocationUrl(String chromeLocationUrl) {
         this.chromeLocationUrl = chromeLocationUrl;
+    }
+
+    public String getSeleniumServer() {
+        return seleniumServer;
+    }
+
+    public void setSeleniumServer(String seleniumServer) {
+        this.seleniumServer = seleniumServer;
     }
 
     public boolean themUser(C2AdminUserAuto dto) throws InterruptedException {

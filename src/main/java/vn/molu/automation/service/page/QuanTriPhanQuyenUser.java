@@ -14,6 +14,7 @@ public class QuanTriPhanQuyenUser extends BasicSetup {
     private WebDriver driver;
     public SignInPage signInPage;
     private String chromeLocationUrl;
+    private String seleniumServer;
     private static final String appUrl = "http://dthgd.mobifone.vn:8005/admin/login";
     private By txtUsername_Login = By.xpath("//input[@placeholder='Tài khoản']");
     private By txtPassword_Login = By.xpath("//input[@placeholder='Mật khẩu']");
@@ -23,7 +24,15 @@ public class QuanTriPhanQuyenUser extends BasicSetup {
     private By cbb_BatBuocDoiMatKhau = By.xpath("//body/div/div/div[@role='dialog']/div[@role='document']/div[@class='modal-content']/div[@id='dialog']/div[@class='modal-body']/div[@class='modal-body']/form[@id='mainForm']/div[@class='row']/div[@class='col-md-6']/div[2]/div[1]/label[1]/span[1]/input[1]");
 
     public void setUp() {
-        driver = getDriver(appUrl, chromeLocationUrl);
+        driver = getDriver(appUrl, chromeLocationUrl, seleniumServer);
+    }
+
+    public String getSeleniumServer() {
+        return seleniumServer;
+    }
+
+    public void setSeleniumServer(String seleniumServer) {
+        this.seleniumServer = seleniumServer;
     }
 
     public boolean createUser(C2AdminUserAuto automationUser, List<GroupUser> listGroupUserPermission, User user) throws InterruptedException {
@@ -38,8 +47,9 @@ public class QuanTriPhanQuyenUser extends BasicSetup {
         }
     }
 
-    public QuanTriPhanQuyenUser(String chromeLocationUrl) {
+    public QuanTriPhanQuyenUser(String chromeLocationUrl, String seleniumServer) {
         this.chromeLocationUrl = chromeLocationUrl;
+        this.seleniumServer = seleniumServer;
     }
 
     public QuanTriPhanQuyenUser() {

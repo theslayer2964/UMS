@@ -15,6 +15,7 @@ public class HeThongCSKH extends BasicSetup {
     private WebDriver driver;
     public SignInPage signInPage;
     private String chromeLocationUrl;
+    private String seleniumServer;
     private static final String appUrl = "https://daunoi.mobifone.vn/b9_cskh/login.xhtml";
     private By txtUsername_Login = By.xpath("//input[@id='frm_login:username']");
     private By txtPassword_Login = By.xpath("//input[@id='frm_login:password']");
@@ -27,11 +28,20 @@ public class HeThongCSKH extends BasicSetup {
     private By searchUserRS = By.xpath("//span[contains(text(),'bản ghi')]");
 
     public void setUp() {
-        driver = getDriver(appUrl, chromeLocationUrl);
+        driver = getDriver(appUrl, chromeLocationUrl, seleniumServer);
     }
 
-    public HeThongCSKH(String chromeLocationUrl) {
+    public String getSeleniumServer() {
+        return seleniumServer;
+    }
+
+    public void setSeleniumServer(String seleniumServer) {
+        this.seleniumServer = seleniumServer;
+    }
+
+    public HeThongCSKH(String chromeLocationUrl, String seleniumServer) {
         this.chromeLocationUrl = chromeLocationUrl;
+        this.seleniumServer = seleniumServer;
     }
 
     public HeThongCSKH() {

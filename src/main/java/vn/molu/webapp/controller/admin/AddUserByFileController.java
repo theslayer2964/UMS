@@ -63,6 +63,8 @@ public class AddUserByFileController extends ApplicationObjectSupport {
     private HandleExceptionService handleExceptionService;
     @Value("${system.selenium-server.path}")
     private String seleniumServer;
+    @Value("${system.firefox.driver}")
+    private String firefoxDriver;
 
     @RequestMapping("/list/add_user_c2_file.html")
     public ModelAndView list(@ModelAttribute(value = Constants.FORM_MODEL_KEY) AddUserFileCommand command,
@@ -113,23 +115,23 @@ public class AddUserByFileController extends ApplicationObjectSupport {
                                     }
                                 }
                                 List<GroupUser> listGroupUserPermission = groupUserService.findGroupUserByRoleNProgram(s.getGroupUser(), Constants.PROGRAM_ID_DTHGD);
-                                QuanTriPhanQuyenUser quanTriPhanQuyenUser = new QuanTriPhanQuyenUser(seleniumServer);
+                                QuanTriPhanQuyenUser quanTriPhanQuyenUser = new QuanTriPhanQuyenUser(firefoxDriver, seleniumServer);
                                 Boolean rsDTHGD = quanTriPhanQuyenUser.createUser(s, listGroupUserPermission, loginUser);
                                 result_OneUserForAllProgram.put(Constants.PROGRAM_DTHGD, rsDTHGD == true ? 1 : 0);
                             }
                             if (s.getProgram().contains(Constants.PROGRAM_ID_TTCP)) {
-                                HeThongTTCP heThongTTCP = new HeThongTTCP(seleniumServer);
+                                HeThongTTCP heThongTTCP = new HeThongTTCP(firefoxDriver,seleniumServer);
                                 Boolean rsTTCP = heThongTTCP.createUser(s, loginUser);
                                 result_OneUserForAllProgram.put(Constants.PROGRAM_TTCP, rsTTCP == true ? 1 : 0);
                             }
                             if (s.getProgram().contains(Constants.PROGRAM_ID_BHTT)) {
-                                HeThongBHTT heThongBHTT = new HeThongBHTT(seleniumServer);
+                                HeThongBHTT heThongBHTT = new HeThongBHTT(firefoxDriver, seleniumServer);
                                 List<GroupUser> listGroupUserPermission = groupUserService.findGroupUserByRoleNProgram(s.getGroupUser(), Constants.PROGRAM_ID_BHTT);
                                 Boolean rsBHTT = heThongBHTT.createUser(s, userService.getUserLogin_BHTT_System(), listGroupUserPermission);
                                 result_OneUserForAllProgram.put(Constants.PROGRAM_BHTT, rsBHTT == true ? 1 : 0);
                             }
                             if (s.getProgram().contains(Constants.PROGRAM_ID_CSKH)) {
-                                HeThongCSKH heThongCSKH = new HeThongCSKH(seleniumServer);
+                                HeThongCSKH heThongCSKH = new HeThongCSKH(firefoxDriver, seleniumServer);
                                 s.setDistrict(Constants.DISTRICT_DEFAULT);
                                 Boolean rsCSKH = heThongCSKH.createUser(s, Constants.CITY_DEFAULT, loginUser);
                                 result_OneUserForAllProgram.put(Constants.PROGRAM_CSKH, rsCSKH == true ? 1 : 0);
@@ -204,7 +206,7 @@ public class AddUserByFileController extends ApplicationObjectSupport {
                         try {
                             if (employeeService.checkUserIsGDV(c2AdminUserAuto.getUser_name()).equals("YES")) { //CHECK GDV
                                 if (c2AdminUserAuto.getNgaycap().contains(Constants.PROGRAM_ID_CSKH)) {
-                                    HeThongCSKH cskh = new HeThongCSKH(seleniumServer);
+                                    HeThongCSKH cskh = new HeThongCSKH(firefoxDriver, seleniumServer);
                                     C2UserAdminDTO dto = new C2UserAdminDTO();
                                     EmployeeDTO employeeDTO = employeeService.findActiveEmp_codeByUsername(c2AdminUserAuto.getUser_name());
                                     if (employeeDTO != null && employeeDTO.getEmp_type() != null) {
@@ -232,12 +234,12 @@ public class AddUserByFileController extends ApplicationObjectSupport {
                                     c2UserAdminDTO.setStatus("1");
                                     String fullname = c2UserAdminService.findbyUsername(c2AdminUserAuto.getUser_name()).getFullName();
                                     c2UserAdminDTO.setFullName(fullname);
-                                    HeThongTTCP ttcp = new HeThongTTCP(seleniumServer);
+                                    HeThongTTCP ttcp = new HeThongTTCP(firefoxDriver, seleniumServer);
                                     Boolean rsTTCP = ttcp.changeShopcode(c2UserAdminDTO, c2AdminUserAuto.getFull_name(), loginUser);
                                     result_OneUserForAllProgram.put(Constants.PROGRAM_TTCP, rsTTCP == true ? 1 : 0);
                                 }
                                 if (c2AdminUserAuto.getNgaycap().contains(Constants.PROGRAM_ID_BHTT)) {
-                                    HeThongBHTT heThongBHTT = new HeThongBHTT(seleniumServer);
+                                    HeThongBHTT heThongBHTT = new HeThongBHTT(firefoxDriver, seleniumServer);
                                     Boolean rsBHTT = heThongBHTT.changeShopcode(c2AdminUserAuto.getUser_name(), c2AdminUserAuto.getPhone(), userService.getUserLogin_BHTT_System());
                                     result_OneUserForAllProgram.put(Constants.PROGRAM_BHTT, rsBHTT == true ? 1 : 0);
                                 }
@@ -246,7 +248,7 @@ public class AddUserByFileController extends ApplicationObjectSupport {
                                         .replace("USER", c2AdminUserAuto.getUser_name()));
                             }
                             if (c2AdminUserAuto.getNgaycap().contains(Constants.PROGRAM_ID_DTHGD)) {
-                                QuanTriPhanQuyenUser qtpq = new QuanTriPhanQuyenUser(seleniumServer);
+                                QuanTriPhanQuyenUser qtpq = new QuanTriPhanQuyenUser(firefoxDriver, seleniumServer);
                                 C2UserAdminDTO dto = new C2UserAdminDTO();
                                 dto.setUsername(c2AdminUserAuto.getUser_name());
                                 dto.setShopCode(c2AdminUserAuto.getPhone());

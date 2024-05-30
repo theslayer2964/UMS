@@ -109,18 +109,22 @@
             </ul>
         </li>
     </security:authorize>
-    <security:authorize access="hasAnyRole('ADMIN','FAD_EXPLANATIONFORM','FAD_GUESTINFO')">
+    <security:authorize access="hasAnyRole('ADMIN','FAD_EXPLANATIONFORM','FAD_GUESTINFO','FAD_GUESTREQUEST')">
         <li class="has-submenu" id="guest">
             <a href="#">
                 <i class="fas fa-atom"></i><spring:message code="menu.guest"/>
                 <div class="arrow-down"></div>
             </a>
             <ul class="submenu">
-                <security:authorize access="hasAnyRole('ADMIN','FAD_EXPLANATIONFORM','FAD_GUESTINFO')">
+                <security:authorize access="hasAnyRole('ADMIN','FAD_EXPLANATIONFORM')">
                     <li><a href="<c:url value='/guest/explanation-form.html'/>"><fmt:message
                             key="menu.guest.explannation-form"/></a></li>
                 </security:authorize>
-                <security:authorize access="hasAnyRole('ADMIN','FAD_EXPLANATIONFORM','FAD_GUESTINFO')">
+                <security:authorize access="hasAnyRole('ADMIN','FAD_GUESTREQUEST')">
+                    <li><a href="<c:url value='/guest/request-user.html'/>"><fmt:message
+                            key="menu.guest.request"/></a></li>
+                </security:authorize>
+                <security:authorize access="hasAnyRole('ADMIN','FAD_GUESTINFO')">
                     <li><a href="<c:url value='/guest/info.html'/>"><fmt:message
                             key="menu.guest.info"/></a></li>
                 </security:authorize>

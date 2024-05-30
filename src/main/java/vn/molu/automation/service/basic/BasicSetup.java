@@ -2,18 +2,11 @@ package vn.molu.automation.service.basic;
 
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.ServletContext;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
@@ -21,32 +14,36 @@ import java.util.concurrent.TimeUnit;
 public class BasicSetup {
     private WebDriver driver;
 
-    public WebDriver getDriver(String appURL, String driverLocation) {
-        initializeTestBaseSetup("firefox", appURL, driverLocation);
+    public WebDriver getDriver(String appURL, String driverLocation, String seleniumServer) {
+        initializeTestBaseSetup("firefox", appURL, driverLocation, seleniumServer);
         return driver;
     }
 
-    private void setDriver(String browserType, String appURL, String driverLocation) {
+    private void setDriver(String browserType, String appURL, String driverLocation, String seleniumServer) {
         switch (browserType) {
             case "chrome":
-                driver = initChromeDriver(appURL, driverLocation);
+                driver = initChromeDriver(appURL, driverLocation, seleniumServer);
                 break;
             case "firefox":
-                driver = initFirefoxDriver(appURL, driverLocation);
+                driver = initFirefoxDriver(appURL, driverLocation, seleniumServer);
                 break;
             default:
                 System.out.println("Browser: " + browserType + " is invalid, Launching Chrome as browser of choice...");
-                driver = initChromeDriver(appURL, driverLocation);
+                driver = initChromeDriver(appURL, driverLocation, seleniumServer);
         }
     }
 
-    private WebDriver initFirefoxDriver(String appURL, String driverLocation) {
+    private WebDriver initFirefoxDriver(String appURL, String driverLocation, String seleniumServer) {
         try {
             System.out.println("Launching firefox browser..." + driverLocation);
-//            System.setProperty("webdriver.gecko.driver", driverLocation);
-//            WebDriver driver = new FirefoxDriver();
-            FirefoxOptions options = new FirefoxOptions();
-            WebDriver driver = new RemoteWebDriver(new URL(driverLocation), options);
+            System.setProperty("webdriver.gecko.driver", driverLocation);
+//            FirefoxOptions options = new FirefoxOptions();
+//            WebDriver driver = new RemoteWebDriver(new URL(seleniumServer), options);
+            DesiredCapabilities capabilities = new DesiredCapabilities();
+            capabilities.setBrowserName("firefox");
+            capabilities.setPlatform(Platform.WINDOWS);
+            // Khởi tạo RemoteWebDriver
+            WebDriver driver = new RemoteWebDriver(new URL(seleniumServer), capabilities);
             driver.manage().window().maximize();
             driver.navigate().to(appURL);
             driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
@@ -58,13 +55,12 @@ public class BasicSetup {
         return null;
     }
 
-    private WebDriver initChromeDriver(String appURL, String driverLocation) {
+    private WebDriver initChromeDriver(String appURL, String driverLocation, String seleniumServer) {
         try {
             System.out.println("Launching chrome browser... " + driverLocation);
-//            System.setProperty("webdriver.chrome.driver", driverLocation);
-//            String seleniumHubUrl = "http://10.151.99.46:4444/wd/hub";
+            System.setProperty("webdriver.chrome.driver", driverLocation);
             ChromeOptions options = new ChromeOptions();
-            WebDriver driver = new RemoteWebDriver(new URL(driverLocation), options);
+            WebDriver driver = new RemoteWebDriver(new URL(seleniumServer), options);
             driver.manage().window().maximize();
             driver.navigate().to(appURL);
             driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
@@ -76,10 +72,10 @@ public class BasicSetup {
         return null;
     }
 
-    public void initializeTestBaseSetup(String browserType, String appURL, String driverLocation) {
+    public void initializeTestBaseSetup(String browserType, String appURL, String driverLocation, String seleniumServer) {
         try {
             // Khởi tạo driver và browser
-            setDriver(browserType, appURL, driverLocation);
+            setDriver(browserType, appURL, driverLocation, seleniumServer);
         } catch (Exception e) {
 //            System.out.println("Error...:");
             e.getStackTrace();

@@ -343,6 +343,18 @@ public class UMSApplication {
                 url.setName(env.getProperty("menu.guest.info"));
                 urlService.save(url);
             }
+
+            if (urlService.findByCode(Constants.FAD_GUEST_REQUEST) == null) {
+                Url url = new Url();
+                url.setCode(Constants.FAD_GUEST_REQUEST);
+                url.setCreatedDate(currentTime);
+                url.setFlgDelete(Constants.FLG_DELETE_ON);
+                UrlGroup urlGroup = urlGroupService.findByCode(Constants.FG_GUEST);
+                url.setUrlGroup(urlGroup);
+                url.setPath(Constants.FAD_GUEST_REQUEST_LINK);
+                url.setName(env.getProperty("menu.guest.request"));
+                urlService.save(url);
+            }
         };
     }
 }

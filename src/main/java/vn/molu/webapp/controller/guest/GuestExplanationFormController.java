@@ -1,4 +1,4 @@
-package vn.molu.webapp.controller.admin;
+package vn.molu.webapp.controller.guest;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;

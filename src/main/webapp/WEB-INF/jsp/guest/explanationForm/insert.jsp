@@ -52,7 +52,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="updateDate" class="control-label"><spring:message
+                                    <label for="username" class="control-label"><spring:message
                                             code="label.user_name"/> </label>
                                     <form:input type="text" id="username" path="username" cssClass="form-control"
                                                 cssStyle="text-transform: uppercase" onblur="validateUsername2()"/>
@@ -99,8 +99,7 @@
 
     form.addEventListener('submit', function (e) {
         e.preventDefault();
-        var rsFile = validateFile();
-        if (rsFile) {
+        if (validateFile()) {
             $.ajax({
                 url: '<c:url value="/ajax/checkUserExist.html" />',
                 type: 'get',

@@ -15,6 +15,7 @@ import java.util.List;
 public class HeThongBHTT extends BasicSetup {
     private WebDriver driver;
     private String chromeLocationUrl;
+    private String seleniumServer;
     public SignInPage signInPage;
     private static final String appUrl = "http://10.3.7.198/admin/";
     private By txtUsername_Login = By.xpath("//input[@id='username']");
@@ -42,14 +43,15 @@ public class HeThongBHTT extends BasicSetup {
     private By btnModal_Rs_Thoat = By.xpath("//span[normalize-space()='THOÁT']");
 
     public void setUp() {
-        driver = getDriver(appUrl, chromeLocationUrl);
+        driver = getDriver(appUrl, chromeLocationUrl, seleniumServer);
     }
 
     public HeThongBHTT() {
     }
 
-    public HeThongBHTT(String chromeLocationUrl) {
+    public HeThongBHTT(String chromeLocationUrl, String seleniumServer) {
         this.chromeLocationUrl = chromeLocationUrl;
+        this.seleniumServer = seleniumServer;
     }
 
     public String getChromeLocationUrl() {
@@ -58,6 +60,14 @@ public class HeThongBHTT extends BasicSetup {
 
     public void setChromeLocationUrl(String chromeLocationUrl) {
         this.chromeLocationUrl = chromeLocationUrl;
+    }
+
+    public String getSeleniumServer() {
+        return seleniumServer;
+    }
+
+    public void setSeleniumServer(String seleniumServer) {
+        this.seleniumServer = seleniumServer;
     }
 
     public boolean changeShopcode(String user_change, String shopcode_new, User user) {

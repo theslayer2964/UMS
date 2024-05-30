@@ -1,9 +1,9 @@
 package vn.molu.webapp.controller.api;
 
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,10 +15,10 @@ import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 @RestController
-public class UserRestController {
+public class TestController {
     @Value("${system.selenium-server.path}")
     private String seleniumServer;
-    @Value("${system.firefox.path}")
+    @Value("${system.firefox.driver}")
     private String firefoxLocationUrl;
 
     @GetMapping("/api/user.html")
@@ -47,10 +47,15 @@ public class UserRestController {
 
     @GetMapping("/firefoxServer")
     public String firefoxServer() throws InterruptedException, MalformedURLException {
-        System.out.println("Launching FIREFOX Server browser...");
-//        System.setProperty("webdriver.gecko.driver", firefoxLocatonUrl);
-        FirefoxOptions options = new FirefoxOptions();
-        WebDriver driver = new RemoteWebDriver(new URL(seleniumServer), options);
+        System.out.println("Launching FIREFOX Server browser...: " + firefoxLocationUrl);
+        System.setProperty("webdriver.gecko.driver", firefoxLocationUrl);
+//        FirefoxOptions options = new FirefoxOptions();
+//        WebDriver driver = new RemoteWebDriver(new URL(seleniumServer), options);
+        DesiredCapabilities capabilities = new DesiredCapabilities();
+        capabilities.setBrowserName("firefox");
+
+        // Khởi tạo RemoteWebDriver
+        WebDriver driver = new RemoteWebDriver(new URL(seleniumServer), capabilities);
         driver.manage().window().maximize();
         driver.navigate().to("http://google.com.vn");
         driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
