@@ -373,7 +373,7 @@
 
     function validateEmailForGrantedPermission() {
         if (email.value) {
-            const regex = /@mobifone\.vn$/;
+            const regex = /@MOBIFONE\.VN$/;
             if (regex.test(email.value)) {
                 email.classList.remove("invalid");
                 document.getElementById('email-validation').textContent = '';

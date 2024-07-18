@@ -20,6 +20,8 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -116,7 +118,7 @@ public class SendMailServiceImpl implements EmailSenderService {
                 try {
                     message.setFrom(new InternetAddress(SENDMAIL_USERNAME));
                     message.setSubject(MimeUtility.encodeText(createSubjectDefault(), "utf-8", "B"));
-                    message.setContent(createContentDefault_General(listUser), "text/html; charset=utf-8");
+                    message.setContent(listUser.isEmpty() ? createContentDefault_General_NoUser() : createContentDefault_General(listUser), "text/html; charset=utf-8");
                     message.addRecipient(Message.RecipientType.TO, new InternetAddress(manager.getEmail()));
                     Transport.send(message);
                 } catch (MessagingException e) {
@@ -126,6 +128,24 @@ public class SendMailServiceImpl implements EmailSenderService {
                 }
             });
         }
+    }
+
+    private String createContentDefault_General_NoUser() {
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String rs = "    <p>Chào anh/chị,</p>\n" +
+                "\n" +
+                "<p>\n" +
+                "      Báo cáo danh sách tài khoản bị khóa của tất cả các đơn vị.</p>" +
+                "    <p>Lý do: vi phạm tần suất tra cứu.</p>\n" +
+                "\n" +
+                "    <p>Từ ngày " + formatter.format(today.minusDays(10)) + " đến ngày "
+                        + formatter.format(today) + " không có nguời dùng vi phạm.</p>\n" +
+                "\n" +
+                "    <p>Trân trọng!</p>\n" +
+                "    <p>Phòng Công Nghệ - Kỹ Thuật</p>\n" +
+                "    <p>Trung tâm kinh doanh công nghệ số - Cty DV MobiFone KV 2</p>";
+        return rs;
     }
 
     private String createContentDefault_General(List<C2UserAdminDTO> group) {

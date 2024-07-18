@@ -4,7 +4,7 @@ import org.openqa.selenium.*;
 import vn.molu.automation.service.basic.BasicSetup;
 import vn.molu.common.Constants;
 import vn.molu.domain.admin.C2AdminUserAuto;
-import vn.molu.domain.admin.GroupUser;
+import vn.molu.domain.admin.GroupUserPermission;
 import vn.molu.domain.admin.User;
 import vn.molu.dto.admin.admin.C2UserAdminDTO;
 
@@ -35,14 +35,14 @@ public class QuanTriPhanQuyenUser extends BasicSetup {
         this.seleniumServer = seleniumServer;
     }
 
-    public boolean createUser(C2AdminUserAuto automationUser, List<GroupUser> listGroupUserPermission, User user) throws InterruptedException {
+    public boolean createUser(C2AdminUserAuto automationUser, List<GroupUserPermission> listGroupUserPermission, User user) throws InterruptedException {
         try {
             setUp();
             signInPage = new SignInPage(driver);
             signInPage.signin(driver, appUrl, txtUsername_Login, txtPassword_Login, btnLogin, user);
-            chonDSNguoiDung();
-            return themmoiUser(automationUser, listGroupUserPermission);
+            return chonDSNguoiDung() ? themmoiUser(automationUser, listGroupUserPermission) : false;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -63,13 +63,14 @@ public class QuanTriPhanQuyenUser extends BasicSetup {
         this.chromeLocationUrl = chromeLocationUrl;
     }
 
-    private boolean themmoiUser(C2AdminUserAuto automationUser, List<GroupUser> listGroupUserPermission) {
+    private boolean themmoiUser(C2AdminUserAuto automationUser, List<GroupUserPermission> listGroupUserPermission) {
         try {
             System.out.println("XXX:" + automationUser.toString());
             JavascriptExecutor jse = (JavascriptExecutor) driver;
             jse.executeScript("window.scrollBy(0,250)");
             Thread.sleep(2000);
             WebElement btnThemmoi = driver.findElement(By.xpath("//button[@type='button'][contains(text(),'Thêm mới')]"));
+            jse.executeScript("window.scrollBy(0,250)");
             btnThemmoi.click();
             Thread.sleep(2000);
             WebElement inputFullname = driver.findElement(By.xpath("//input[@id='fullName']"));
@@ -93,7 +94,15 @@ public class QuanTriPhanQuyenUser extends BasicSetup {
 //            if (!check_BatBuocDoiMK.getAttribute("class").contains("ant-checkbox-checked")) {
 //                driver.findElement(cbb_BatBuocDoiMatKhau).click(); // checkbox - bat buoc doi mat khau
 //            }
-            Thread.sleep(1000);
+            // connect ldap
+            if (automationUser.getLdap() != null && automationUser.getLdap().trim().equals("1")) {
+                driver.findElement(By.xpath("//div//div[3]//div[1]//label[1]//span[1]//input[1]")).click();
+                // ldap user:
+                WebElement txt_account = driver.findElement(By.xpath("//input[@id='account']"));
+                Thread.sleep(1000);
+                txt_account.sendKeys(automationUser.getUser_name());
+                Thread.sleep(1000);
+            }
             WebElement btnShop_code = driver.findElement(By.xpath("(//*[@data-icon='down'])[8]"));
             btnShop_code.click();
             WebElement txtShop_code = driver.findElement(By.xpath("//div[@class='col-md-6']//div[1]//div[1]//div[1]//div[1]//div[2]//div[1]//input[1]"));
@@ -132,12 +141,12 @@ public class QuanTriPhanQuyenUser extends BasicSetup {
             } else
                 return false;
         } catch (Exception e) {
-//            e.printStackTrace();
+            e.printStackTrace();
             return false;
         }
     }
 
-    private boolean phanquyenUser(List<GroupUser> listGroupUserPermission) {
+    private boolean phanquyenUser(List<GroupUserPermission> listGroupUserPermission) {
         try {
             if (!listGroupUserPermission.isEmpty()) {
                 driver.findElement(By.xpath("//div[@class='ant-select ant-select-enabled']")).click();
@@ -163,6 +172,7 @@ public class QuanTriPhanQuyenUser extends BasicSetup {
             }
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -170,11 +180,14 @@ public class QuanTriPhanQuyenUser extends BasicSetup {
     private boolean chonDSNguoiDung() {
         try {
             WebElement litab_ChucnangAdmin = driver.findElement(By.xpath("//a[contains(text(),'Chức năng Admin')]"));
+            Thread.sleep(1000);
             litab_ChucnangAdmin.click();
             WebElement litab_DSNguoidung = driver.findElement(By.xpath("//a[contains(text(),'Danh sách người dùng')]"));
+            Thread.sleep(1000);
             litab_DSNguoidung.click();
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -186,7 +199,7 @@ public class QuanTriPhanQuyenUser extends BasicSetup {
             signInPage.signin(driver, appUrl, txtUsername_Login, txtPassword_Login, btnLogin, user);
             return chonDSNguoiDung() ? change(dto) : false;
         } catch (Exception e) {
-//            e.printStackTrace();
+            e.printStackTrace();
             return false;
         }
     }
@@ -247,6 +260,7 @@ public class QuanTriPhanQuyenUser extends BasicSetup {
             driver.quit();
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -277,6 +291,10 @@ public class QuanTriPhanQuyenUser extends BasicSetup {
                 driver.findElement(By.xpath("//div[@id='calendarAccess']//div[@role='combobox']")).click(); // lich truy nhap
                 Thread.sleep(1000); //c8_nghiviec
                 driver.findElement(By.xpath("//li[normalize-space()='" + Constants.RETIRE_SCHEDULER + "']")).click();
+                WebElement grantedIp = driver.findElement(txtGrantedIp);
+                grantedIp.clear();
+                Thread.sleep(1000);
+                grantedIp.sendKeys(Constants.IP_DEFAULT);
                 jse.executeScript("window.scrollBy(0,250)");
                 Thread.sleep(1000);
                 WebElement selectAll_Permission = driver.findElement(By.xpath("//div[@class='ant-table-selection']//input[@type='checkbox']"));
@@ -291,7 +309,7 @@ public class QuanTriPhanQuyenUser extends BasicSetup {
                 return true;
             }
         } catch (Exception e) {
-//            e.printStackTrace();
+            e.printStackTrace();
             driver.quit();
             return false;
         }

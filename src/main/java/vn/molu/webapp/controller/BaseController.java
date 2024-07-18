@@ -46,11 +46,6 @@ public class BaseController {
         model.addAttribute("item", list);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-//            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-//            String username = userDetails.getUsername();
-//            System.out.println("USER:" + username);
-//        }
         if (authentication != null) {
             for (GrantedAuthority authority : authentication.getAuthorities()) {
                 String role = authority.getAuthority();

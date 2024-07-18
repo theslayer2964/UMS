@@ -22,7 +22,7 @@ import vn.molu.common.Constants;
 import vn.molu.common.utils.RequestUtil;
 import vn.molu.dao.temp.ShopDAO;
 import vn.molu.domain.admin.C2AdminUserAuto;
-import vn.molu.domain.admin.GroupUser;
+import vn.molu.domain.admin.GroupUserPermission;
 import vn.molu.domain.admin.User;
 import vn.molu.dto.admin.admin.*;
 import vn.molu.service.admin.*;
@@ -34,6 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -61,6 +62,8 @@ public class AddUserByFileController extends ApplicationObjectSupport {
     private Environment environment;
     @Autowired
     private HandleExceptionService handleExceptionService;
+    @Autowired
+    private UserLoginService userLoginService;
     @Value("${system.selenium-server.path}")
     private String seleniumServer;
     @Value("${system.firefox.driver}")
@@ -114,7 +117,7 @@ public class AddUserByFileController extends ApplicationObjectSupport {
                                         }
                                     }
                                 }
-                                List<GroupUser> listGroupUserPermission = groupUserService.findGroupUserByRoleNProgram(s.getGroupUser(), Constants.PROGRAM_ID_DTHGD);
+                                List<GroupUserPermission> listGroupUserPermission = groupUserService.findGroupUserByRoleNProgram(s.getGroupUser(), Constants.PROGRAM_ID_DTHGD);
                                 QuanTriPhanQuyenUser quanTriPhanQuyenUser = new QuanTriPhanQuyenUser(firefoxDriver, seleniumServer);
                                 Boolean rsDTHGD = quanTriPhanQuyenUser.createUser(s, listGroupUserPermission, loginUser);
                                 result_OneUserForAllProgram.put(Constants.PROGRAM_DTHGD, rsDTHGD == true ? 1 : 0);
@@ -126,7 +129,7 @@ public class AddUserByFileController extends ApplicationObjectSupport {
                             }
                             if (s.getProgram().contains(Constants.PROGRAM_ID_BHTT)) {
                                 HeThongBHTT heThongBHTT = new HeThongBHTT(firefoxDriver, seleniumServer);
-                                List<GroupUser> listGroupUserPermission = groupUserService.findGroupUserByRoleNProgram(s.getGroupUser(), Constants.PROGRAM_ID_BHTT);
+                                List<GroupUserPermission> listGroupUserPermission = groupUserService.findGroupUserByRoleNProgram(s.getGroupUser(), Constants.PROGRAM_ID_BHTT);
                                 Boolean rsBHTT = heThongBHTT.createUser(s, userService.getUserLogin_BHTT_System(), listGroupUserPermission);
                                 result_OneUserForAllProgram.put(Constants.PROGRAM_BHTT, rsBHTT == true ? 1 : 0);
                             }
@@ -168,8 +171,9 @@ public class AddUserByFileController extends ApplicationObjectSupport {
                             if (s.getProgram().contains(Constants.PROGRAM_ID_RESNUM)) {// RESNUM:
                                 Resum_UserDTO resnumUser = new Resum_UserDTO();
                                 resnumUser.setUser_tracuu(s.getUser_name());
-                                Integer rsResum = resnumUserService.insert(resnumUser);
-                                result_OneUserForAllProgram.put(Constants.PROGRAM_RESNUM, rsResum > 0 ? 1 : 0);
+                                resnumUserService.insert(resnumUser);
+                                result_OneUserForAllProgram.put(Constants.PROGRAM_RESNUM,
+                                        userLoginService.findUserResnumByName(s.getUser_name())!= null ? 1 : 0);
                             }
                             result_AllUserAllProgram_ShowMessage.put(s.getUser_name(), handleExceptionService.convertResultOneUserForAllProgram(result_OneUserForAllProgram));
                         } catch (InterruptedException e) {
@@ -179,6 +183,13 @@ public class AddUserByFileController extends ApplicationObjectSupport {
                         }
                         autoC2UserService.save(s);
                     });
+//                     check RESNUM:
+//                    List<String> usernames = list.stream().map(C2AdminUserAuto::getUser_name).collect(Collectors.toList());
+//                    System.out.println("DANH SACH RESNUM:");
+//                    userLoginService.findUsersResnumByName(usernames).forEach(
+//                            user -> System.out.println("RESNUM: " + user)
+//                    );
+
 
                     if (listIncorrectDataUser.size() > 0) { // Thong bao dữ liêu đầu vào ko đúng:
                         mav.addObject(Constants.MESSAGE_TYPE_MODEL_KEY_INCORRECT_MAIL, true);

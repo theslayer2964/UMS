@@ -24,7 +24,6 @@ public class C2UserAdminDAOImpl extends GenericDAOImpl<C2UserAdminDTO, Long> imp
                 "from c2_admin_user where center_code = '2' ";
 
         return DTOMapper((List<Object[]>) entityManager.createNativeQuery(sqlClause)
-
                 .getResultList());
     }
 

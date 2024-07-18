@@ -6,7 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Service;
 import vn.molu.automation.service.basic.BasicSetup;
 import vn.molu.domain.admin.C2AdminUserAuto;
-import vn.molu.domain.admin.GroupUser;
+import vn.molu.domain.admin.GroupUserPermission;
 import vn.molu.domain.admin.User;
 
 import java.util.List;
@@ -78,6 +78,7 @@ public class HeThongBHTT extends BasicSetup {
             Thread.sleep(1000);
             return clickQuanLyHeThong(btnDanhSachNSD_NhomNSD) ? change(user_change, shopcode_new) : false;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -90,6 +91,7 @@ public class HeThongBHTT extends BasicSetup {
             Thread.sleep(1000);
             return clickQuanLyHeThong(btnDanhSachNSD_NhomNSD) ? inactiveUserDetail(userName) : false;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -161,7 +163,7 @@ public class HeThongBHTT extends BasicSetup {
         }
     }
 
-    public Boolean createUser(C2AdminUserAuto user, User userLogin, List<GroupUser> groupUsers) {
+    public Boolean createUser(C2AdminUserAuto user, User userLogin, List<GroupUserPermission> groupUsers) {
         try {
             setUp();
             signInPage = new SignInPage(driver);
@@ -169,11 +171,12 @@ public class HeThongBHTT extends BasicSetup {
             Thread.sleep(1000);
             return clickQuanLyHeThong(btnDanhSachNSD_NhomNSD) ? themUser(user, groupUsers) : false;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
 
-    private boolean themUser(C2AdminUserAuto user, List<GroupUser> groupUsers) {
+    private boolean themUser(C2AdminUserAuto user, List<GroupUserPermission> groupUsers) {
         try { // phan1: Thong tin truy cap
             driver.findElement(By.xpath("//span[@class='p-button-text p-c'][contains(text(),'Thêm mới')]")).click();
             Thread.sleep(1000);
@@ -187,7 +190,7 @@ public class HeThongBHTT extends BasicSetup {
             Thread.sleep(1000);
             driver.findElement(cbb_LDAPInput).click();
             Thread.sleep(1000);
-            driver.findElement(By.xpath("//li[@label='Không kiểm tra']")).click();
+            driver.findElement(By.xpath("//li[@label='Có kiểm tra']")).click();
             Thread.sleep(1000);
             driver.findElement(cbbStatusInput).click();
             Thread.sleep(1000);
@@ -210,11 +213,12 @@ public class HeThongBHTT extends BasicSetup {
             }   // phan2: quyen truy cap
             return authororityUser(user.getUser_name(), groupUsers);
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
 
-    private boolean authororityUser(String user_name, List<GroupUser> groupUsers) {
+    private boolean authororityUser(String user_name, List<GroupUserPermission> groupUsers) {
         try {
             if (!groupUsers.isEmpty()) {
                 driver.findElement(By.xpath("//span[contains(text(),'Thuộc nhóm')]")).click();
@@ -225,8 +229,8 @@ public class HeThongBHTT extends BasicSetup {
                     try {
                         Thread.sleep(1000);
                         txtInput_Search.sendKeys(group.getPermission());
-                        Thread.sleep(1000);// chưa tối ưu -> phải click chọn từng quyền (chứ ko phải chon tất)
-                        driver.findElement(By.xpath("//span[contains(text(),'Chọn tất')]")).click();
+                        Thread.sleep(1000);
+                        driver.findElement(By.xpath("//div[@class='p-checkbox-box']")).click();
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
@@ -250,7 +254,7 @@ public class HeThongBHTT extends BasicSetup {
                 return false;
             }
         } catch (Exception e) {
-//            e.printStackTrace();
+            e.printStackTrace();
             driver.quit();
             return false;
         }
@@ -263,26 +267,33 @@ public class HeThongBHTT extends BasicSetup {
             if (!rs.isEmpty()) {
                 driver.findElement(btnClose_message).click();
                 Thread.sleep(1000);
-                driver.quit();
+//                driver.quit();
                 return true;
             } else {
                 driver.quit();
                 return false;
             }
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
 
-    public boolean grantIpAndAccessTime(String username){ // chọn tab - danh sách lịch truy nhập
-        if(clickQuanLyHeThong(btnAccessSchedule)){
+    public boolean grantIpAndAccessTime(String username) { // chọn tab - danh sách lịch truy nhập
+        try {
+            driver.findElement(btnShow_Menu).click();
+            Thread.sleep(1000);
+            driver.findElement(btnAccessSchedule).click();
+            Thread.sleep(1000);
             return grantAccessTime(username) ? granIP(username) : false;
-        } else { // Chọn tab - that bai
-            driver.quit();
+        } catch (Exception e) {
+            e.printStackTrace();
+//            driver.quit();
             return false;
         }
     }
-    private boolean grantAccessTime(String username){
+
+    private boolean grantAccessTime(String username) {
         try {
             WebElement input_Name = driver.findElement(By.xpath("//input[contains(@class,'p-inputtext p-component p-column-filter')]"));
             input_Name.clear();
@@ -321,16 +332,23 @@ public class HeThongBHTT extends BasicSetup {
                 Thread.sleep(1000);
                 return false;
             }
-        } catch (Exception e){
-            driver.quit();
+        } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
 
-    private boolean granIP(String username){
-        if(clickQuanLyHeThong(btnIP_Granted)){
+    private boolean granIP(String username) {
+        try {
+            driver.findElement(btnShow_Menu).click();
+            Thread.sleep(1000);
+//            driver.findElement(btnQuanTriHeThong).click();
+//            Thread.sleep(1000);
+            driver.findElement(btnIP_Granted).click();
+            Thread.sleep(1000);
             return granIP_Detail(username);
-        } else { // Chọn tab - that bai
+        } catch (Exception e){
+            e.printStackTrace();
             driver.quit();
             return false;
         }
@@ -369,6 +387,7 @@ public class HeThongBHTT extends BasicSetup {
                 driver.findElement(btnLuuDuLieu_Update).click();
                 Thread.sleep(1000);
                 driver.findElement(btnClose_message).click(); // close modal BHTT
+                driver.quit();
                 return true;
             } else { // ko co user
                 driver.findElement(btnModal_Rs_Thoat).click();
@@ -376,7 +395,8 @@ public class HeThongBHTT extends BasicSetup {
                 driver.quit();
                 return false;
             }
-        } catch (Exception e){
+        } catch (Exception e) {
+            e.printStackTrace();
             driver.quit();
             return false;
         }
@@ -392,6 +412,7 @@ public class HeThongBHTT extends BasicSetup {
             Thread.sleep(1000);
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }

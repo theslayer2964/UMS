@@ -25,6 +25,7 @@ import vn.molu.domain.admin.User;
 import vn.molu.dto.admin.admin.C2UserAdminDTO;
 import vn.molu.dto.admin.admin.EmployeeDTO;
 import vn.molu.dto.admin.admin.ShopDTO;
+import vn.molu.dto.admin.admin.UserLoginDTO;
 import vn.molu.service.ResponseContainer;
 import vn.molu.service.admin.*;
 import vn.molu.service.exception.HandleExceptionService;
@@ -63,6 +64,8 @@ public class C2UserController extends ApplicationObjectSupport {
     private Environment environment;
     @Autowired
     private HandleExceptionService handleExceptionService;
+    @Autowired
+    private UserLoginService userLoginService;
     @Value("${system.selenium-server.path}")
     private String chromeLocationUrl;
     @Value("${system.firefox.driver}")
@@ -192,10 +195,10 @@ public class C2UserController extends ApplicationObjectSupport {
         return mav;
     }
 
-    private void changeShopcode(ModelAndView mav, C2AdminUserCommand command) throws InterruptedException, MalformedURLException {
+    private void changeShopcode(ModelAndView mav, C2AdminUserCommand command) throws InterruptedException {
         command.getPojo().setStatus("1"); // ?????
         Map<String, Integer> result_OneUserForAllProgram = new HashMap<>(); // lay kq User
-        List<EmployeeDTO> employListHistory = employeeService.findActiveUserByUsername(command.getPojo().getUsername());
+//        List<EmployeeDTO> employListHistory = employeeService.findActiveUserByUsername(command.getPojo().getUsername());
         List<String> listIncorrectDataUser = new ArrayList<>(); // Lỗi - dữ liệu đầu vao ko hợp lệ
         User loginUser = userService.findByUsername(); // USER dang login
         if (employeeService.checkUserIsGDV(command.getPojo().getUsername()).equals("YES")) { //CHECK GDV
@@ -236,27 +239,29 @@ public class C2UserController extends ApplicationObjectSupport {
             result_OneUserForAllProgram.put(Constants.PROGRAM_DTHGD, rsDTHGD == true ? 1 : 0);
         }
         if (command.getProgram().contains(Constants.PROGRAM_ID_CSKK)) {
-            if (employListHistory.size() > 0) {
-                try {
-                    Integer rsCSKK = employeeService.changeShopcodeInCSKK(command.getEmail(), command.getPojo().getShopCode());
-                    System.out.println("RSCSKK:" + rsCSKK);
-                    result_OneUserForAllProgram.put(Constants.PROGRAM_CSKK, rsCSKK > 0 ? 1 : 0);
-                } catch (Exception e) {
-                    Throwable cause = e.getCause();
-                    if (cause instanceof GenericJDBCException) { // mail ko tồn tại trên hệ thống
-                        // loi
-                        mav.addObject(Constants.MESSAGE_TYPE_MODEL_KEY_INCORRECT_MAIL, true);
-                        mav.addObject(Constants.MESSAGE_TYPE_MODEL_KEY, Constants.MESSAGE_TYPE_ERROR);
-                        mav.addObject(Constants.MESSAGE_RESPONSE_MODEL_KEY_INCORRECT,
-                                environment.getProperty("msg.incorrect_mail_message").replace("INCORRECT_MAIL", command.getEmail()));
-                        result_OneUserForAllProgram.put(Constants.PROGRAM_CSKK, 0);
-                    }
+            try {
+                Integer rsCSKK = employeeService.changeShopcodeInCSKK(command.getEmail(), command.getPojo().getShopCode());
+                System.out.println("RSCSKK:" + rsCSKK);
+                result_OneUserForAllProgram.put(Constants.PROGRAM_CSKK, rsCSKK > 0 ? 1 : 0);
+            } catch (Exception e) {
+                Throwable cause = e.getCause();
+                if (cause instanceof GenericJDBCException) { // mail ko tồn tại trên hệ thống
+                    // loi
+                    mav.addObject(Constants.MESSAGE_TYPE_MODEL_KEY_INCORRECT_MAIL, true);
+                    mav.addObject(Constants.MESSAGE_TYPE_MODEL_KEY, Constants.MESSAGE_TYPE_ERROR);
+                    mav.addObject(Constants.MESSAGE_RESPONSE_MODEL_KEY_INCORRECT,
+                            environment.getProperty("msg.incorrect_mail_message").replace("INCORRECT_MAIL", command.getEmail()));
+                    result_OneUserForAllProgram.put(Constants.PROGRAM_CSKK, 0);
                 }
             }
         }
         if (command.getProgram().contains(Constants.PROGRAM_ID_RESNUM)) {
-            Integer rsResum = employeeService.changeShopCodeInResnum(command.getPojo().getUsername(), command.getPojo().getShopCode());
-            result_OneUserForAllProgram.put(Constants.PROGRAM_RESNUM, rsResum > 0 ? 1 : 0);
+            employeeService.changeShopCodeInResnum(command.getPojo().getUsername().trim(), command.getPojo().getShopCode().trim());
+            UserLoginDTO userLoginDTO = userLoginService.findUserResnumByName(command.getPojo().getUsername().trim());
+            if (userLoginDTO == null)
+                result_OneUserForAllProgram.put(Constants.PROGRAM_RESNUM, 0);
+            else
+                result_OneUserForAllProgram.put(Constants.PROGRAM_RESNUM, userLoginDTO.getShop_code().equals(command.getPojo().getShopCode().trim()) ? 1 : 0);
         }
         if (listIncorrectDataUser.size() > 0) { // Thong bao dữ liêu đầu vào ko đúng:
             mav.addObject(Constants.MESSAGE_TYPE_MODEL_KEY_INCORRECT_MAIL, true);

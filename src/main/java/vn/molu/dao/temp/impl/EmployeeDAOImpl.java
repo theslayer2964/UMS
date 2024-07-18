@@ -63,10 +63,11 @@ public class EmployeeDAOImpl extends GenericDAOImpl<EmployeeDTO, String> impleme
     @Transactional
     public Integer changeShopCodeResnum(String username, String newShopCode) {
         try {
-            String sqlClause = "UPDATE sonbn.user_login SET shop_code = ?1 WHERE user_name = ?2 ";
+//            String sqlClause = "UPDATE sonbn.user_login SET shop_code = ?1 WHERE user_name = ?2 ";
+            String sqlClause = "{ call CHANGE_SHOPCODE_RESNUM(?1, ?2)}";
             return entityManager.createNativeQuery(sqlClause)
-                    .setParameter(1, newShopCode)
-                    .setParameter(2, username)
+                    .setParameter(1, username)
+                    .setParameter(2, newShopCode)
                     .executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();

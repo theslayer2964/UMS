@@ -1,8 +1,8 @@
 package vn.molu.webapp.controller.api;
 
+import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,8 +17,8 @@ import java.util.concurrent.TimeUnit;
 @RestController
 public class TestController {
     @Value("${system.selenium-server.path}")
-    private String seleniumServer;
-    @Value("${system.firefox.driver}")
+    private String seleniumHub;
+    @Value("${selenium.gecko-driver.path}")
     private String firefoxLocationUrl;
 
     @GetMapping("/api/user.html")
@@ -29,58 +29,47 @@ public class TestController {
 
     @GetMapping("/example")
     public String example() throws InterruptedException, MalformedURLException {
-        System.out.println("Launching Chrome browser...");
-//        String seleniumHubUrl = "http://10.151.99.46:4444/wd/hub";
-        FirefoxOptions options = new FirefoxOptions();
-//        System.setProperty("webdriver.chrome.driver", chromeLocationUrl);
-        WebDriver driver = new RemoteWebDriver(new URL(seleniumServer), options);
-        driver.manage().window().maximize();
-        driver.navigate().to("http://google.com.vn");
-        driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
-        driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+        try {
+            System.out.println("Launching Chrome browser...: " + seleniumHub);
+            // url
+            DesiredCapabilities caps = DesiredCapabilities.firefox();
+            caps.setBrowserName("firefox");
+            caps.setPlatform(Platform.ANY);
+            WebDriver driver = new RemoteWebDriver(new URL(seleniumHub), caps);
+            driver.manage().window().maximize();
+            driver.navigate().to("http://google.com.vn");
+            driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
+            driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
 
-        Thread.sleep(1000);
+            Thread.sleep(1000);
 
-        driver.quit();
-        return "Success";
+            driver.quit();
+            return "Success";
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    @GetMapping("/firefoxServer")
-    public String firefoxServer() throws InterruptedException, MalformedURLException {
-        System.out.println("Launching FIREFOX Server browser...: " + firefoxLocationUrl);
-        System.setProperty("webdriver.gecko.driver", firefoxLocationUrl);
-//        FirefoxOptions options = new FirefoxOptions();
-//        WebDriver driver = new RemoteWebDriver(new URL(seleniumServer), options);
-        DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setBrowserName("firefox");
+    @GetMapping("/local")
+    public String local() throws InterruptedException, MalformedURLException {
+        try {
+            System.setProperty("webdriver.gecko.driver", firefoxLocationUrl);
+            WebDriver driver = new FirefoxDriver();
+            driver.manage().window().maximize();
+            driver.navigate().to("http://google.com.vn");
+            System.out.println("Title: " + driver.getTitle());
+            driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
+            driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
 
-        // Khởi tạo RemoteWebDriver
-        WebDriver driver = new RemoteWebDriver(new URL(seleniumServer), capabilities);
-        driver.manage().window().maximize();
-        driver.navigate().to("http://google.com.vn");
-        driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
-        driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+            Thread.sleep(5000);
 
-        Thread.sleep(1000);
-
-        driver.quit();
-        return "Success";
-    }
-
-    @GetMapping("/firefox")
-    public String firefox() throws InterruptedException, MalformedURLException {
-        System.out.println("Launching FIREFOX browser...");
-        System.setProperty("webdriver.gecko.driver", firefoxLocationUrl);
-        WebDriver driver = new FirefoxDriver();
-        driver.manage().window().maximize();
-        driver.navigate().to("http://google.com.vn");
-        driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
-        driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-
-        Thread.sleep(1000);
-
-        driver.quit();
-        return "Success";
+            driver.quit();
+            return "Success";
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 }
 

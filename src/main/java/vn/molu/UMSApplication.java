@@ -56,7 +56,7 @@ public class UMSApplication {
     public void sendEmailEveryday() {
         log.info("running daily scheduled at: (BAT MAIL)" + new Date());
 //        emailSenderService.sendMailToManager_LockUserOverAccess();
-        emailSenderService.sendMailToTTCNS_General();
+//        emailSenderService.sendMailToTTCNS_General();
         System.out.println("Đã gửi xong - CHUA BAT NGHE");
     }
 

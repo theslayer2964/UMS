@@ -109,6 +109,7 @@
                                 <th id="groupUser"><spring:message code="label.user.group"/></th>
                                 <th id="position"><spring:message code="label.department.position"/></th>
                                 <th id="email"><spring:message code="label.cskk.email"/></th>
+                                <th id="ldap"><spring:message code="label.add-user-file.ldap"/></th>
                             </tr>
                             </thead>
                         </table>
@@ -173,6 +174,7 @@
             document.getElementById("groupUser").removeAttribute("hidden");
             document.getElementById("position").removeAttribute("hidden");
             document.getElementById("email").removeAttribute("hidden");
+            document.getElementById("ldap").removeAttribute("hidden");
             document.getElementById("shop_old").innerHTML = "<spring:message code="label.c2user.tothu"/>";
             document.getElementById("shop_new").innerHTML = "<spring:message code="label.shopcode"/>";
             document.getElementById("district").innerHTML = "<spring:message code="label.c2user.district"/>";
@@ -197,6 +199,7 @@
             document.getElementById("groupUser").setAttribute("hidden", true);
             document.getElementById("position").setAttribute("hidden", true);
             document.getElementById("email").setAttribute("hidden", true);
+            document.getElementById("ldap").setAttribute("hidden", true);
             document.getElementById("shop_old").innerHTML = "<spring:message code="label.c2user.shopcode_old"/>";
             document.getElementById("shop_new").innerHTML = "<spring:message code="label.c2user.shopcode_new"/>";
             document.getElementById("district").innerHTML = "<spring:message code="label.user.email"/>"
@@ -221,7 +224,7 @@
             for (let i = 0; i < selectedRow.length; i++) {
                 let row = selectedRow[i];
                 let temp = new C2AdminUserAuto(row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9],
-                    row[10], row[11], row[12], row[13], row[14], row[15], row[16], row[17], row[18], row[19]);
+                    row[10], row[11], row[12], row[13], row[14], row[15], row[16], row[17], row[18], row[19], row[20]);
                 list.push(temp)
             }
         }
@@ -264,7 +267,8 @@
                         var groupUser = jsonData[i][16] != null ? jsonData[i][16] : '';
                         var position = jsonData[i][17] != null ? jsonData[i][17] : '';
                         var email = jsonData[i][18] != null ? jsonData[i][18] : '';
-                        table.row.add(['', user_name, full_name, phone, birthday, cmnd, ngay_cap, noi_cap, to_thu, shop_code, ip, lich, status, loaiNV_CSKH, city, district, program, groupUser, position, email]).draw(false);
+                        var ldap = jsonData[i][19] != null ? jsonData[i][19] : '';
+                        table.row.add(['', user_name, full_name, phone, birthday, cmnd, ngay_cap, noi_cap, to_thu, shop_code, ip, lich, status, loaiNV_CSKH, city, district, program, groupUser, position, email, ldap]).draw(false);
                     }
                 };
             } else if (document.getElementById('fileType').value === 'update') {
@@ -318,7 +322,7 @@
 
     class C2AdminUserAuto {
         constructor(user_name, full_name, phone, birthday, cmnd, ngaycap, noicap, toThu, shop_code, granted_ip,
-                    access_schedule, status, type, city, district, program, groupUser, position, email) {
+                    access_schedule, status, type, city, district, program, groupUser, position, email, ldap) {
             this.user_name = user_name;
             this.full_name = full_name;
             this.phone = phone;
@@ -338,6 +342,7 @@
             this.groupUser = groupUser;
             this.position = position;
             this.email = email;
+            this.ldap = ldap;
         }
     }
 

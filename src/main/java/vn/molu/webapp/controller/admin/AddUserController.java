@@ -16,7 +16,7 @@ import vn.molu.automation.service.page.QuanTriPhanQuyenUser;
 import vn.molu.common.Constants;
 import vn.molu.common.utils.RequestUtil;
 import vn.molu.dao.temp.*;
-import vn.molu.domain.admin.GroupUser;
+import vn.molu.domain.admin.GroupUserPermission;
 import vn.molu.domain.admin.Program;
 import vn.molu.domain.admin.User;
 import vn.molu.dto.admin.admin.*;
@@ -108,7 +108,7 @@ public class AddUserController extends ApplicationObjectSupport {
         for (String string : programs) {
             Map<String, Integer> result_OneUserForAllProgram = new HashMap<>();
             if (string.equals(Constants.PROGRAM_ID_DTHGD)) {
-                List<GroupUser> listGroupUserPermission = groupUserService.findAll();
+                List<GroupUserPermission> listGroupUserPermission = groupUserService.findAll();
                 QuanTriPhanQuyenUser quanTriPhanQuyenUser = new QuanTriPhanQuyenUser(firefoxDriver, seleniumServer);
                 boolean rsDTHGD = quanTriPhanQuyenUser.createUser(command.getPojo(), listGroupUserPermission, userLogin); // birthday='2024-02-06'
                 result_OneUserForAllProgram.put(Constants.PROGRAM_DTHGD, rsDTHGD == true ? 1 : 0);
@@ -152,7 +152,7 @@ public class AddUserController extends ApplicationObjectSupport {
                 // b3: show kq:
             } else if(string.equals(Constants.PROGRAM_ID_BHTT)){
                 HeThongBHTT heThongBHTT = new HeThongBHTT(firefoxDriver, seleniumServer);
-                List<GroupUser> listGroupUserPermission = groupUserService.findGroupUserByRoleNProgram(0, Constants.PROGRAM_ID_BHTT);
+                List<GroupUserPermission> listGroupUserPermission = groupUserService.findGroupUserByRoleNProgram(0, Constants.PROGRAM_ID_BHTT);
                 Boolean rsBHTT = heThongBHTT.createUser(command.getPojo(), userService.getUserLogin_BHTT_System(), listGroupUserPermission);
                 result_OneUserForAllProgram.put(Constants.PROGRAM_BHTT, rsBHTT == true ? 1 : 0);
             } else if (string.equals(Constants.PROGRAM_ID_RESNUM)) {

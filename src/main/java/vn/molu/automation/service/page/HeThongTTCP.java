@@ -85,9 +85,9 @@ public class HeThongTTCP extends BasicSetup {
         if (disableUserList.size() != 0) { // có tổ thu đó
             Thread.sleep(1000);
             txtToThuCuoc.sendKeys(Keys.ENTER);
-            Thread.sleep(3000);
+            Thread.sleep(1000);
             JavascriptExecutor jse = (JavascriptExecutor) driver;
-            jse.executeScript("window.scrollBy(0,550)");
+            jse.executeScript("window.scrollBy(0,450)");
             Thread.sleep(2000);
             driver.findElement(By.xpath("//span[normalize-space()='Thêm']")).click(); // THEM
             Thread.sleep(1000);
@@ -105,43 +105,55 @@ public class HeThongTTCP extends BasicSetup {
                 System.out.println("chưa tồn tại " + maNV);
                 WebElement fullnameNV = driver.findElement(txtFullname);
                 fullnameNV.sendKeys(dto.getFull_name());
+                jse.executeScript("window.scrollBy(0,450)");
                 Thread.sleep(1000);
-                WebElement birthday = driver.findElement(By.xpath("//input[@id='parentForm:dtpBirthday_input']"));
-                Thread.sleep(3000);
-                birthday.click(); // SAI NE` -> BI BI BI
-                Thread.sleep(1000);
-//                convertDate(birthday, dto.getBirthday());
-                birthday.sendKeys("15032024");
-                Thread.sleep(1000);
-                WebElement cmnd = driver.findElement(By.xpath("//input[@id='parentForm:txtIdNo']"));
-                cmnd.sendKeys(dto.getCmnd());
-                Thread.sleep(1000);
-                WebElement noicap = driver.findElement(By.xpath("//input[@id='parentForm:txtIdIssuePlace']"));
-                noicap.sendKeys(dto.getNoicap());
-                Thread.sleep(1000);
-                WebElement ngaycap = driver.findElement(By.xpath("//input[@id='parentForm:dtpIdIssueDate_input']"));
-                Thread.sleep(3000);
-                ngaycap.click(); // SAI NE` -> BI BI BI
-                Thread.sleep(1000);
-//                convertDate(ngaycap, dto.getNgaycap());
-                ngaycap.sendKeys("19032024");
-                Thread.sleep(1000);
-                WebElement trangthai = driver.findElement(By.xpath("/html[1]/body[1]/main[1]/section[1]/section[1]/div[1]/div[1]/div[2]/form[1]/div[1]/div[2]/fieldset[2]/div[1]/table[1]/tbody[1]/tr[3]/td[4]/div[1]"));
-                trangthai.click();
-                if (dto.getStatus() == 0) {
-                    WebElement trangthai_KoHieuLuc = driver.findElement(By.xpath("//li[@id='parentForm:idStatus_1']"));
-                    trangthai_KoHieuLuc.click();
+                try {
+                    WebElement birthday = driver.findElement(By.xpath("//input[@id='parentForm:dtpBirthday_input']"));
                     Thread.sleep(1000);
-                } else {
-                    WebElement trangthai_HieuLuc = driver.findElement(By.xpath("//li[@id='parentForm:idStatus_0']"));
-                    trangthai_HieuLuc.click();
+                    birthday.click(); // SAI NE` -> BI BI BI
                     Thread.sleep(1000);
+                    birthday.sendKeys("15032024");
+                    Thread.sleep(1000);
+                    jse.executeScript("window.scrollBy(0,450)");
+                    WebElement cmnd = driver.findElement(By.xpath("//input[@id='parentForm:txtIdNo']"));
+                    Thread.sleep(1000);
+                    cmnd.sendKeys(dto.getCmnd());
+                    Thread.sleep(1000);
+                    jse.executeScript("window.scrollBy(0,450)");
+                    WebElement noicap = driver.findElement(By.xpath("//input[@id='parentForm:txtIdIssuePlace']"));
+                    Thread.sleep(1000);
+                    noicap.sendKeys(dto.getNoicap());
+                    Thread.sleep(1000);
+                    jse.executeScript("window.scrollBy(0,450)");
+                    WebElement ngaycap = driver.findElement(By.xpath("//input[@id='parentForm:dtpIdIssueDate_input']"));
+                    Thread.sleep(1000);
+                    ngaycap.click(); // SAI NE` -> BI BI BI
+                    Thread.sleep(1000);
+                    ngaycap.sendKeys("19032024");
+                    Thread.sleep(1000);
+                    jse.executeScript("window.scrollBy(0,450)");
+                    WebElement trangthai = driver.findElement(By.xpath("/html[1]/body[1]/main[1]/section[1]/section[1]/div[1]/div[1]/div[2]/form[1]/div[1]/div[2]/fieldset[2]/div[1]/table[1]/tbody[1]/tr[3]/td[4]/div[1]"));
+                    Thread.sleep(1000);
+                    trangthai.click();
+                    if (dto.getStatus() == 0) {
+                        WebElement trangthai_KoHieuLuc = driver.findElement(By.xpath("//li[@id='parentForm:idStatus_1']"));
+                        trangthai_KoHieuLuc.click();
+                        Thread.sleep(1000);
+                    } else {
+                        WebElement trangthai_HieuLuc = driver.findElement(By.xpath("//li[@id='parentForm:idStatus_0']"));
+                        trangthai_HieuLuc.click();
+                        Thread.sleep(1000);
+                    }
+                    WebElement btnChapnhan = driver.findElement(By.xpath("//button[@id='parentForm:frmActionsTop:idAccept']"));
+                    Thread.sleep(1000);
+                    btnChapnhan.click(); // CLICK
+                    Thread.sleep(5000);
+                    driver.quit();
+                    return true;
+                } catch (Exception e){
+                    e.printStackTrace();
+                    return false;
                 }
-                WebElement btnChapnhan = driver.findElement(By.xpath("//button[@id='parentForm:frmActionsTop:idAccept']"));
-                btnChapnhan.click(); // CLICK
-                Thread.sleep(5000);
-                driver.quit();
-                return true;
             }
         } else {
             System.out.println("KHONG CO TO THU DO");
@@ -173,7 +185,7 @@ public class HeThongTTCP extends BasicSetup {
                 Thread.sleep(2000);
                 return true;
             } catch (Exception e) {
-//                e.printStackTrace();
+                e.printStackTrace();
                 return false;
             }
         }
@@ -203,6 +215,7 @@ public class HeThongTTCP extends BasicSetup {
             } else
                 return false;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -214,6 +227,7 @@ public class HeThongTTCP extends BasicSetup {
             signInPage.signin(driver, appUrl, txtUsername_Login, txtPassword_Login, btnLogin, user);
             return chonDanhmucNV() ? disableUserOldShopThenQuit(dto, shopcode_old, "0") : false;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -272,40 +286,48 @@ public class HeThongTTCP extends BasicSetup {
             try {
                 String searchUserRS = driver.findElement(txt_searchUserRS).getText().split(" ")[2];
                 if (Integer.parseInt(searchUserRS.trim()) > 0) { // co user
-                    driver.findElement(By.xpath("//span[text()='Hiệu lực']")).click();
-                    Thread.sleep(1000);
-                    ((JavascriptExecutor) driver)
-                            .executeScript("window.scrollTo(0, document.body.scrollHeight)");
-                    Thread.sleep(1000);
-                    // btnSua- -> SAI NE```
-                    WebElement btnSua = driver.findElement(By.xpath("//button[@id='parentForm:frmActionsTop:idUpdate']"));
-                    Thread.sleep(1000);
-                    btnSua.click();
-                    Thread.sleep(1000);
-                    WebElement trangthai = driver.findElement(By.xpath("/html[1]/body[1]/main[1]/section[1]/section[1]/div[1]/div[1]/div[2]/form[1]/div[1]/div[2]/fieldset[2]/div[1]/table[1]/tbody[1]/tr[3]/td[4]/div[1]"));
-                    trangthai.click();
-                    Thread.sleep(1000);
-                    driver.findElement(By.xpath("//li[@id='parentForm:idStatus_1']")).click(); // trangthai_KoHieuLuc
-                    Thread.sleep(1000);
-                    driver.findElement(By.xpath("//button[@id='parentForm:frmActionsTop:idAccept']//span[@class='ui-button-text ui-c'][contains(text(),'Chấp nhận')]"))
-                            .click(); // SAVE
-                    Thread.sleep(1000);
-                    if (driver.findElements(By.xpath("//span[contains(text(), 'Dữ liệu được cập nhật thành công.')]")).size() != 0) {
-                        driver.findElement(By.xpath("//div[@id='commonDialog']//span[@class='ui-icon ui-icon-closethick']")).click();
-                        Thread.sleep(1000); // close table
+                    List<WebElement> user_hieuluc = driver.findElements(By.xpath("//span[text()='Hiệu lực']"));
+                        Thread.sleep(5000);
+                    if(user_hieuluc.size() > 0){ // user đó co hieu luc
+                        driver.findElement(By.xpath("//span[text()='Hiệu lực']")).click();
+                        Thread.sleep(1000);
+                        ((JavascriptExecutor) driver)
+                                .executeScript("window.scrollTo(0, document.body.scrollHeight)");
+                        Thread.sleep(1000);
+                        // btnSua- -> SAI NE```
+                        WebElement btnSua = driver.findElement(By.xpath("//button[@id='parentForm:frmActionsTop:idUpdate']"));
+                        Thread.sleep(1000);
+                        btnSua.click();
+                        Thread.sleep(1000);
+                        WebElement trangthai = driver.findElement(By.xpath("/html[1]/body[1]/main[1]/section[1]/section[1]/div[1]/div[1]/div[2]/form[1]/div[1]/div[2]/fieldset[2]/div[1]/table[1]/tbody[1]/tr[3]/td[4]/div[1]"));
+                        trangthai.click();
+                        Thread.sleep(1000);
+                        driver.findElement(By.xpath("//li[@id='parentForm:idStatus_1']")).click(); // trangthai_KoHieuLuc
+                        Thread.sleep(1000);
+                        WebElement btnSave = driver.findElement(By.xpath("//button[@id='parentForm:frmActionsTop:idAccept']//span[@class='ui-button-text ui-c'][contains(text(),'Chấp nhận')]"));
+                        Thread.sleep(1000);
+                        btnSave.click(); // SAVE
+                        Thread.sleep(1000);
+                        if (driver.findElements(By.xpath("//span[contains(text(), 'Dữ liệu được cập nhật thành công.')]")).size() != 0) {
+                            driver.findElement(By.xpath("//div[@id='commonDialog']//span[@class='ui-icon ui-icon-closethick']")).click();
+                            Thread.sleep(1000); // close table
+                            return true;
+                        } else {
+                            System.out.println("USER NAY` Vẫn còn hiệu luc ở đâu đó - ko disable đc");
+                            Thread.sleep(4000);
+                            return false;
+                        }
+                    } else { // co user-> nhung user ddos het hieu luc -> qua ok -> khoi sua
                         return true;
-                    } else {
-                        System.out.println("USER NAY` Vẫn còn hiệu luc ở đâu đó - ko disable đc");
-                        Thread.sleep(4000);
-                        return false;
                     }
+
                 } else {
                     System.out.println("ko co user trong shop cu");
                     return true;
                 }
             } catch (Exception e) {
-//                e.printStackTrace();
-                return true;
+                e.printStackTrace();
+                return false;
             }
         } else { // ko co old shop code
             System.out.println("KO CO OLD SHOP");
@@ -373,7 +395,7 @@ public class HeThongTTCP extends BasicSetup {
                     return false;
                 }
             } catch (Exception e) {
-//                e.printStackTrace();
+                e.printStackTrace();
                 driver.quit();
                 return false;
             }

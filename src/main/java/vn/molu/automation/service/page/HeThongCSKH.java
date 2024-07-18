@@ -62,6 +62,7 @@ public class HeThongCSKH extends BasicSetup {
             signInPage.signin(driver, appUrl, txtUsername_Login, txtPassword_Login, btnLogin, user);
             return clickNhanvienPhattrienDV() ? themUser(dto, city_name) : false;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -79,7 +80,8 @@ public class HeThongCSKH extends BasicSetup {
             Thread.sleep(1000);
             driver.findElement(By.xpath("//span[contains(text(), '" + dto.getShop_code() + " -')]")).click();
             Thread.sleep(1000); //
-            driver.findElement(By.xpath("//span[contains(text(),'Thêm mới')]")).click();
+//            driver.findElement(By.xpath("//span[contains(text(),'Thêm mới')]")).click();
+            driver.findElement(By.xpath("//button[@id='frmEmpDetail:j_idt129']")).click();
             Thread.sleep(1000);
             //them TT:
             WebElement txtUser = driver.findElement(By.xpath("//input[@id='frmDialog:empCode']"));
@@ -134,6 +136,7 @@ public class HeThongCSKH extends BasicSetup {
             driver.quit();
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -223,6 +226,7 @@ public class HeThongCSKH extends BasicSetup {
             } else
                 return false;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -236,6 +240,7 @@ public class HeThongCSKH extends BasicSetup {
             return clickNhanvienPhattrienDV() ?
                 disableUserInOldShopThenQuit(dto, shopcode_old) : false;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -337,7 +342,7 @@ public class HeThongCSKH extends BasicSetup {
                 return true;
             }
         } catch (Exception e) {
-//            e.printStackTrace();
+            e.printStackTrace();
             return false;
         }
     }
@@ -429,7 +434,7 @@ public class HeThongCSKH extends BasicSetup {
                 return false;
             }
         } catch (Exception e) {
-//            e.printStackTrace();
+            e.printStackTrace();
             driver.quit();
             return false;
         }

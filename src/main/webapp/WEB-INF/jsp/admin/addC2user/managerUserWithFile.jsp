@@ -98,6 +98,9 @@
     </div>
 </div>
 <script>
+    // message:
+
+
     $('#file').on('change', function () {
         let fileName = $(this).val().split('\\').pop();
         $(this).next('.custom-file-label').addClass("selected").html(fileName);
@@ -181,6 +184,30 @@
                 table.rows({page: 'current'}).deselect();
             }
         });
+
+        // Thông báo KQ: DS USER: (user - ds chương trình thành công)
+        <c:if test="${not empty isMessageDifficult}">
+        var notyf = new Notyf({
+            duration: 0,
+            position: {x: 'left', y: 'bottom'},
+            dismissible: true,
+        });
+        // Xử lí chuỗi từ Backend gửi về
+        let cleanedString = '${messageResponse}'.slice(1, -1);
+        var keyValuePairs = cleanedString.split(", ");
+        keyValuePairs.forEach(user => {
+            notyf.success(user);
+        })
+        </c:if>
+        <%-- DS User ko đúng--%>
+        <c:if test="${not empty isMessageIncorrectMail}">
+        var notyf_Incorrect = new Notyf({
+            duration: 0,
+            position: {x: 'right', y: 'bottom'},
+            dismissible: true,
+        });
+        notyf_Incorrect.error('${incorrectMail_messageResponse}');
+        </c:if>
     });
 
 

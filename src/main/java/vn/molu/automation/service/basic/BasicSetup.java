@@ -3,6 +3,7 @@ package vn.molu.automation.service.basic;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.springframework.stereotype.Service;
@@ -36,14 +37,8 @@ public class BasicSetup {
     private WebDriver initFirefoxDriver(String appURL, String driverLocation, String seleniumServer) {
         try {
             System.out.println("Launching firefox browser..." + driverLocation);
-            System.setProperty("webdriver.gecko.driver", driverLocation);
-//            FirefoxOptions options = new FirefoxOptions();
-//            WebDriver driver = new RemoteWebDriver(new URL(seleniumServer), options);
-            DesiredCapabilities capabilities = new DesiredCapabilities();
-            capabilities.setBrowserName("firefox");
-            capabilities.setPlatform(Platform.WINDOWS);
-            // Khởi tạo RemoteWebDriver
-            WebDriver driver = new RemoteWebDriver(new URL(seleniumServer), capabilities);
+            FirefoxOptions options = new FirefoxOptions();
+            WebDriver driver = new RemoteWebDriver(new URL(seleniumServer), options);
             driver.manage().window().maximize();
             driver.navigate().to(appURL);
             driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);

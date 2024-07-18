@@ -73,13 +73,6 @@ public class CSKK_UserDAOImpl extends GenericDAOImpl<CSKK_UserDTO, String> imple
             Integer rs = entityManager.createNativeQuery(sqlClause)
                     .setParameter(1, email.toUpperCase())
                     .executeUpdate();
-
-//            StoredProcedureQuery storedProcedureQuery = entityManager.createStoredProcedureQuery("update_CHT");
-//            storedProcedureQuery.registerStoredProcedureParameter("p_email", String.class, ParameterMode.IN);
-//            storedProcedureQuery.setParameter("p_email", email);
-//            storedProcedureQuery.registerStoredProcedureParameter("error_code", Integer.class, ParameterMode.OUT);
-//            storedProcedureQuery.execute();
-//            Integer rs = (Integer) storedProcedureQuery.getOutputParameterValue("error_code");
             return rs;
         } catch (Exception e) {
             throw e;

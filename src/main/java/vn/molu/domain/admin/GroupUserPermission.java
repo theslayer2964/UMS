@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 @Table(name = "GROUP_USER_PERMISSION")
 @Entity
-public class GroupUser implements Serializable {
+public class GroupUserPermission implements Serializable {
 
     @Id
     @Column(name = "GROUP_USER_ID")
@@ -19,6 +19,8 @@ public class GroupUser implements Serializable {
     private String permission;
     @Column(name = "PROGRAM_ID")
     private Integer programId;
+    @Column(name = "DESCRIPTION")
+    private String description;
 
     public Integer getProgramId() {
         return programId;
@@ -52,13 +54,22 @@ public class GroupUser implements Serializable {
         this.userRole = userRole;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public String toString() {
-        return "GroupUser{" +
+        return "GroupUserPermission{" +
                 "groupUserId='" + groupUserId + '\'' +
-                ", userRole='" + userRole + '\'' +
+                ", userRole=" + userRole +
                 ", permission='" + permission + '\'' +
                 ", programId=" + programId +
+                ", description='" + description + '\'' +
                 '}';
     }
 }

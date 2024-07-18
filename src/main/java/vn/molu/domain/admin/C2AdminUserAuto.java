@@ -51,6 +51,16 @@ public class C2AdminUserAuto implements Serializable {
     private String position;
     @Column(name = "email")
     private String email;
+    @Column(name = "ldap")
+    private String ldap;
+
+    public String getLdap() {
+        return ldap;
+    }
+
+    public void setLdap(String ldap) {
+        this.ldap = ldap;
+    }
 
     public int getGroupUser() {
         return groupUser;
@@ -244,6 +254,7 @@ public class C2AdminUserAuto implements Serializable {
                 ", groupUser=" + groupUser +
                 ", position='" + position + '\'' +
                 ", email='" + email + '\'' +
+                ", ldap='" + ldap + '\'' +
                 '}';
     }
 }
