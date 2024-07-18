@@ -2,6 +2,7 @@ package vn.molu;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -48,6 +49,9 @@ public class UMSApplication {
     @Autowired
     private EmailSenderService emailSenderService;
 
+    @Value("system.sendmail.status")
+    private String sendmailStatus;
+
     public static void main(String[] args) {
         SpringApplication.run(UMSApplication.class, args);
     }
@@ -56,8 +60,12 @@ public class UMSApplication {
     public void sendEmailEveryday() {
         log.info("running daily scheduled at: (BAT MAIL)" + new Date());
 //        emailSenderService.sendMailToManager_LockUserOverAccess();
-//        emailSenderService.sendMailToTTCNS_General();
-        System.out.println("Đã gửi xong - CHUA BAT NGHE");
+        if(Integer.parseInt(sendmailStatus) == 1){
+            emailSenderService.sendMailToTTCNS_General();
+            System.out.println("Đã gửi mail");
+        } else {
+            System.out.println("CHUA GUI MAIL");
+        }
     }
 
     @Bean

@@ -54,6 +54,8 @@ public class TestController {
     @GetMapping("/local")
     public String local() throws InterruptedException, MalformedURLException {
         try {
+            System.out.println("Launching Chrome - local - browser...: " + firefoxLocationUrl);
+            ///
             System.setProperty("webdriver.gecko.driver", firefoxLocationUrl);
             WebDriver driver = new FirefoxDriver();
             driver.manage().window().maximize();

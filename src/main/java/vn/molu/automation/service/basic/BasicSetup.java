@@ -3,6 +3,7 @@ package vn.molu.automation.service.basic;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -36,9 +37,13 @@ public class BasicSetup {
 
     private WebDriver initFirefoxDriver(String appURL, String driverLocation, String seleniumServer) {
         try {
-            System.out.println("Launching firefox browser..." + driverLocation);
-            FirefoxOptions options = new FirefoxOptions();
-            WebDriver driver = new RemoteWebDriver(new URL(seleniumServer), options);
+//            System.out.println("Launching firefox browser..." + driverLocation);
+//            FirefoxOptions options = new FirefoxOptions();
+//            WebDriver driver = new RemoteWebDriver(new URL(seleniumServer), options);
+            System.out.println("Launching Chrome - local - browser...: " + driverLocation);
+            ///
+            System.setProperty("webdriver.gecko.driver", driverLocation);
+            WebDriver driver = new FirefoxDriver();
             driver.manage().window().maximize();
             driver.navigate().to(appURL);
             driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
